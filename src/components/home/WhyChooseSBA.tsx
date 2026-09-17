@@ -1,13 +1,13 @@
 'use client';
 
 import React from 'react';
-import { Truck, ShieldCheck, FileCheck, Anchor, MapPin, Award } from 'lucide-react';
+import { Truck, ShieldCheck, FileCheck, Anchor, MapPin, Award, type LucideIcon } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function WhyChooseSBA() {
   const { language } = useLanguage();
   const ja = language === 'ja';
-  const reasons = ja ? [
+  const reasons: Array<[LucideIcon, string, string]> = ja ? [
     [Truck,'国内輸送の手配','SBA Transport Serviceとして、車両の国内輸送や港への搬入について手配・調整をサポートします。'],
     [FileCheck,'オークションシート・車両情報','利用可能なオークションシートや車両書類を確認し、必要に応じて翻訳・確認をサポートします。'],
     [MapPin,'茨城県水戸市を拠点','SBA合同会社の所在地は、〒310-0832 茨城県水戸市吉田3066です。お問い合わせやお取引の窓口としてご利用いただけます。'],
