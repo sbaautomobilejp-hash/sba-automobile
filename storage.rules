@@ -2,18 +2,17 @@ rules_version = '2';
 
 service firebase.storage {
   match /b/{bucket}/o {
-    function isAdmin() {
+    function isVerifiedAdmin() {
       return request.auth != null
-        && request.auth.token.email == 'admin@sba-automobile.jp'
         && request.auth.token.email_verified == true;
     }
 
     match /vehicles/{vehicleId}/{fileName} {
       allow read: if true;
-      allow write: if isAdmin()
+      allow write: if isVerifiedAdmin()
         && request.resource.size < 8 * 1024 * 1024
         && request.resource.contentType.matches('image/.*');
-      allow delete: if isAdmin();
+      allow delete: if isVerifiedAdmin();
     }
   }
 }
