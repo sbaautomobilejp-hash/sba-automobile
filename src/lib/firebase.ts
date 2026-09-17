@@ -12,12 +12,12 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
+// Authentication only needs the core Firebase web config.
+// Firestore/Storage can be initialized separately when their config is available.
 export const isFirebaseConfigured = Boolean(
   firebaseConfig.apiKey &&
     firebaseConfig.authDomain &&
     firebaseConfig.projectId &&
-    firebaseConfig.storageBucket &&
-    firebaseConfig.messagingSenderId &&
     firebaseConfig.appId &&
     firebaseConfig.apiKey !== 'your-api-key'
 );
@@ -27,8 +27,6 @@ let auth: Auth | null = null;
 let firestore: Firestore | null = null;
 let storage: FirebaseStorage | null = null;
 
-// Firebase client SDKs are only initialized when the browser has a complete
-// public web configuration. There is intentionally no server/admin SDK here.
 if (typeof window !== 'undefined' && isFirebaseConfigured) {
   try {
     app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
