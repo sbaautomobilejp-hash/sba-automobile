@@ -1,6 +1,6 @@
 import { Vehicle, Inquiry, VehicleStatus, InquiryStatus } from '@/types';
 import { INITIAL_DEMO_VEHICLES, INITIAL_DEMO_INQUIRIES } from './demoData';
-import { isFirebaseConfigured, firestore, storage, auth } from './firebase';
+import { isFirebaseConfigured, firestore } from './firebase';
 import {
   collection,
   doc,
@@ -11,7 +11,6 @@ import {
   query,
   orderBy,
 } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { compressImage } from './imageUtils';
 
 const STORAGE_KEY_VEHICLES = 'sba_vehicles_demo_cache_v1';
@@ -77,13 +76,6 @@ function requireFirestore() {
     throw new Error('Firebase is not configured. This operation is available after production setup.');
   }
   return firestore;
-}
-
-function requireStorage() {
-  if (!isFirebaseConfigured || !storage) {
-    throw new Error('Firebase Storage is not configured. Connect Firebase before uploading vehicle images.');
-  }
-  return storage;
 }
 
 export async function getVehicles(): Promise<Vehicle[]> {
@@ -152,27 +144,22 @@ export async function uploadVehicleImage(file: File, vehicleId: string): Promise
   const { blob, dataUrl } = await compressImage(file, 1600, 1200, 0.82);
   if (!isFirebaseConfigured) return dataUrl;
 
-  const bucket = requireStorage();
-  if (!auth?.currentUser) {
-    throw new Error('Admin Firebase session is not available. Please log in again.');
-  }
-  if (!auth.currentUser.emailVerified) {
-    throw new Error('Admin Firebase email is not verified. Verify the admin email and log in again.');
-  }
+  const formData = new FormData();
+  formData.append('file', new File([blob], file.name.replace(/[^a-zA-Z0-9.-]/g, '_'), { type: 'image/jpeg' }));
+  formData.append('vehicleId', vehicleId);
 
-  const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-  const fileName = `${Date.now()}-${safeName}`;
-  const storageRef = ref(bucket, `vehicles/${vehicleId}/${fileName}`);
-
-  // Use a timeout so a blocked Storage request can never leave the admin UI
-  // stuck on "Compressing & Uploading..." forever.
-  const uploadPromise = uploadBytes(storageRef, blob, { contentType: 'image/jpeg' });
-  const timeoutPromise = new Promise<never>((_, reject) => {
-    window.setTimeout(() => reject(new Error('Firebase Storage upload timed out. Check Storage, bucket, and Storage Rules.')), 30000);
+  const response = await fetch('/api/upload', {
+    method: 'POST',
+    body: formData,
+    credentials: 'same-origin',
   });
 
-  await Promise.race([uploadPromise, timeoutPromise]);
-  return getDownloadURL(storageRef);
+  const payload = await response.json().catch(() => null);
+  if (!response.ok || !payload?.url) {
+    throw new Error(payload?.error || 'Image upload failed. Please try again.');
+  }
+
+  return payload.url as string;
 }
 
 export async function getInquiries(): Promise<Inquiry[]> {
