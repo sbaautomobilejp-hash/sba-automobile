@@ -1,6 +1,6 @@
 import { Vehicle, Inquiry, VehicleStatus, InquiryStatus } from '@/types';
 import { INITIAL_DEMO_VEHICLES, INITIAL_DEMO_INQUIRIES } from './demoData';
-import { isFirebaseConfigured, firestore, storage } from './firebase';
+import { isFirebaseConfigured, firestore, storage, auth } from './firebase';
 import {
   collection,
   doc,
@@ -17,8 +17,6 @@ import { compressImage } from './imageUtils';
 const STORAGE_KEY_VEHICLES = 'sba_vehicles_demo_cache_v1';
 const STORAGE_KEY_INQUIRIES = 'sba_inquiries_demo_cache_v1';
 
-// Local persistence exists only for the unconfigured demo site. Once Firebase
-// is configured, cloud data is the source of truth and failures are surfaced.
 let memoryVehicles: Vehicle[] = [...INITIAL_DEMO_VEHICLES];
 let memoryInquiries: Inquiry[] = [...INITIAL_DEMO_INQUIRIES];
 
@@ -90,7 +88,6 @@ function requireStorage() {
 
 export async function getVehicles(): Promise<Vehicle[]> {
   if (!isFirebaseConfigured) return getDemoVehicles();
-
   const db = requireFirestore();
   const q = query(collection(db, 'vehicles'), orderBy('createdAt', 'desc'));
   const snapshot = await getDocs(q);
@@ -110,11 +107,7 @@ export async function getVehicleById(id: string): Promise<Vehicle | null> {
 }
 
 export async function saveVehicle(vehicle: Vehicle): Promise<void> {
-  const updatedVehicle: Vehicle = {
-    ...vehicle,
-    updatedAt: new Date().toISOString(),
-  };
-
+  const updatedVehicle: Vehicle = { ...vehicle, updatedAt: new Date().toISOString() };
   if (!isFirebaseConfigured) {
     const current = getDemoVehicles();
     const index = current.findIndex((v) => v.id === updatedVehicle.id);
@@ -123,7 +116,6 @@ export async function saveVehicle(vehicle: Vehicle): Promise<void> {
     setDemoVehicles(current);
     return;
   }
-
   const db = requireFirestore();
   await setDoc(doc(db, 'vehicles', updatedVehicle.id), updatedVehicle);
 }
@@ -133,7 +125,6 @@ export async function deleteVehicle(id: string): Promise<void> {
     setDemoVehicles(getDemoVehicles().filter((v) => v.id !== id));
     return;
   }
-
   const db = requireFirestore();
   await deleteDoc(doc(db, 'vehicles', id));
 }
@@ -147,12 +138,8 @@ export async function updateVehicleStatus(id: string, status: VehicleStatus): Pr
     await saveVehicle(vehicle);
     return;
   }
-
   const db = requireFirestore();
-  await updateDoc(doc(db, 'vehicles', id), {
-    status,
-    updatedAt: new Date().toISOString(),
-  });
+  await updateDoc(doc(db, 'vehicles', id), { status, updatedAt: new Date().toISOString() });
 }
 
 export async function toggleVehicleFeatured(id: string): Promise<void> {
@@ -163,20 +150,33 @@ export async function toggleVehicleFeatured(id: string): Promise<void> {
 
 export async function uploadVehicleImage(file: File, vehicleId: string): Promise<string> {
   const { blob, dataUrl } = await compressImage(file, 1600, 1200, 0.82);
-
   if (!isFirebaseConfigured) return dataUrl;
 
   const bucket = requireStorage();
+  if (!auth?.currentUser) {
+    throw new Error('Admin Firebase session is not available. Please log in again.');
+  }
+  if (!auth.currentUser.emailVerified) {
+    throw new Error('Admin Firebase email is not verified. Verify the admin email and log in again.');
+  }
+
   const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
   const fileName = `${Date.now()}-${safeName}`;
   const storageRef = ref(bucket, `vehicles/${vehicleId}/${fileName}`);
-  await uploadBytes(storageRef, blob, { contentType: 'image/jpeg' });
+
+  // Use a timeout so a blocked Storage request can never leave the admin UI
+  // stuck on "Compressing & Uploading..." forever.
+  const uploadPromise = uploadBytes(storageRef, blob, { contentType: 'image/jpeg' });
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    window.setTimeout(() => reject(new Error('Firebase Storage upload timed out. Check Storage, bucket, and Storage Rules.')), 30000);
+  });
+
+  await Promise.race([uploadPromise, timeoutPromise]);
   return getDownloadURL(storageRef);
 }
 
 export async function getInquiries(): Promise<Inquiry[]> {
   if (!isFirebaseConfigured) return getDemoInquiries();
-
   const db = requireFirestore();
   const q = query(collection(db, 'inquiries'), orderBy('createdAt', 'desc'));
   const snapshot = await getDocs(q);
@@ -194,14 +194,12 @@ export async function submitInquiry(
     status: 'new',
     createdAt: new Date().toISOString(),
   };
-
   if (!isFirebaseConfigured) {
     const current = getDemoInquiries();
     current.unshift(newInquiry);
     setDemoInquiries(current);
     return newInquiry;
   }
-
   const db = requireFirestore();
   await setDoc(doc(db, 'inquiries', newInquiry.id), newInquiry);
   return newInquiry;
@@ -217,7 +215,6 @@ export async function updateInquiryStatus(id: string, status: InquiryStatus): Pr
     }
     return;
   }
-
   const db = requireFirestore();
   await updateDoc(doc(db, 'inquiries', id), { status });
 }
@@ -227,7 +224,6 @@ export async function deleteInquiry(id: string): Promise<void> {
     setDemoInquiries(getDemoInquiries().filter((i) => i.id !== id));
     return;
   }
-
   const db = requireFirestore();
   await deleteDoc(doc(db, 'inquiries', id));
 }
