@@ -13,7 +13,6 @@ const firebaseConfig = {
 };
 
 // Authentication only needs the core Firebase web config.
-// Firestore/Storage can be initialized separately when their config is available.
 export const isFirebaseConfigured = Boolean(
   firebaseConfig.apiKey &&
     firebaseConfig.authDomain &&
@@ -32,7 +31,15 @@ if (typeof window !== 'undefined' && isFirebaseConfigured) {
     app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
     auth = getAuth(app);
     firestore = getFirestore(app);
-    storage = getStorage(app);
+
+    // Pass the bucket explicitly. This avoids Firebase Storage waiting for a
+    // missing/ambiguous default bucket configuration on production builds.
+    if (firebaseConfig.storageBucket) {
+      const bucketUrl = firebaseConfig.storageBucket.startsWith('gs://')
+        ? firebaseConfig.storageBucket
+        : `gs://${firebaseConfig.storageBucket}`;
+      storage = getStorage(app, bucketUrl);
+    }
   } catch (error) {
     console.warn('Firebase initialization failed:', error);
   }
