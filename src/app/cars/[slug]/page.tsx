@@ -106,9 +106,9 @@ export default function CarDetailPage() {
   };
 
   const statusLabels = {
-    available: 'Available For Export',
-    reserved: 'Reserved by Client',
-    sold: 'Exported / Sold',
+    available: 'Available',
+    reserved: 'Reserved',
+    sold: 'Sold',
   };
 
   const whatsappNumber = '+818066651199';
@@ -157,7 +157,7 @@ export default function CarDetailPage() {
             </span>
             <div className="text-left sm:text-right">
               <span className="text-[10px] uppercase tracking-wider text-slate-400 block">
-                FOB Japan Price
+                Listed Vehicle Price
               </span>
               <span className="text-3xl font-black text-white">
                 {formatPrice(vehicle.price)}
@@ -258,7 +258,7 @@ export default function CarDetailPage() {
                 <span className="text-slate-400 block mb-1">Steering Position</span>
                 <div className="flex items-center gap-1.5 font-bold text-white text-sm">
                   <Compass className="w-4 h-4 text-japan-red" />
-                  <span>{vehicle.steering} (Right-Hand Drive)</span>
+                  <span>{vehicle.steering} ({vehicle.steering === 'RHD' ? 'Right-Hand Drive' : 'Left-Hand Drive'})</span>
                 </div>
               </div>
             </div>
@@ -311,7 +311,7 @@ export default function CarDetailPage() {
                 </div>
                 <div className="flex justify-between py-2 border-b border-white/5">
                   <span className="text-slate-400">Auction Evaluation:</span>
-                  <span className="font-mono font-bold text-emerald-400">{vehicle.auctionGrade || 'Grade 4.5'}</span>
+                  <span className="font-mono font-bold text-emerald-400">{vehicle.auctionGrade || 'Not provided'}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-white/5">
                   <span className="text-slate-400">Availability:</span>
@@ -355,7 +355,7 @@ export default function CarDetailPage() {
               {/* Pricing Header */}
               <div className="border-b border-white/10 pb-5">
                 <span className="text-xs uppercase font-bold text-slate-400 tracking-wider block">
-                  Export Price (FOB Japan)
+                  Listed Vehicle Price
                 </span>
                 <div className="text-3xl sm:text-4xl font-black text-white mt-1">
                   {formatPrice(vehicle.price)}
@@ -397,7 +397,7 @@ export default function CarDetailPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Shipping Mode:</span>
-                    <span className="font-semibold text-white">Roll-on/Roll-off (Ro-Ro)</span>
+                    <span className="font-semibold text-white">Arranged according to route and carrier</span>
                   </div>
                 </div>
               </div>
