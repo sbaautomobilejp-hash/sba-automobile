@@ -129,28 +129,12 @@ export default function CarDetailPage() {
           <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
           <span className="text-japan-red font-medium">{vehicle.make} {vehicle.model}</span>
         </nav>
-
-        {/* Demo Notification Banner (Requirement #8) */}
-        {vehicle.isDemo && (
-          <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between text-xs text-amber-300">
-            <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 rounded bg-amber-500 text-obsidian-950 font-bold uppercase text-[10px]">
-                DEMO SPECIFICATION
-              </span>
-              <span>This vehicle listing is an illustrative placeholder demonstrating SBA Automobile&apos;s inventory profile.</span>
-            </div>
-            <Link href="/admin/login" className="underline font-semibold hover:text-white">
-              Admin Portal
-            </Link>
-          </div>
-        )}
-
         {/* Title & Quick Status Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 border-b border-white/10 pb-6">
           <div>
             <div className="flex items-center gap-2.5 mb-2">
               <span className="text-xs uppercase font-bold text-japan-red tracking-widest">
-                {vehicle.make} Certified Stock
+                {vehicle.make} Vehicle
               </span>
               <span className="text-slate-600">•</span>
               <span className="font-mono text-xs text-slate-400">Chassis: {vehicle.chassisCode}</span>
@@ -377,7 +361,7 @@ export default function CarDetailPage() {
                   {formatPrice(vehicle.price)}
                 </div>
                 <p className="text-[11px] text-slate-400 mt-1">
-                  Includes Japanese customs export clearance, documentation, and terminal handling.
+                  Final pricing, export charges, documentation and terminal fees are confirmed according to the vehicle and destination.
                 </p>
               </div>
 
@@ -405,11 +389,11 @@ export default function CarDetailPage() {
                 <div className="p-3 bg-obsidian-850 rounded-xl border border-white/5 text-[11px] space-y-1.5 text-slate-300">
                   <div className="flex justify-between">
                     <span className="text-slate-400">Inland Transport:</span>
-                    <span className="font-semibold text-emerald-400">Covered by SBA Fleet</span>
+                    <span className="font-semibold text-emerald-400">Arranged according to inquiry</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Inspection:</span>
-                    <span className="font-semibold text-white">Inspection Documentation</span>
+                    <span className="font-semibold text-white">Available documentation</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Shipping Mode:</span>
@@ -447,7 +431,7 @@ export default function CarDetailPage() {
                   <span>SBA合同会社 Company Information</span>
                 </div>
                 <p>
-                  Official Japanese commercial invoice with genuine chassis verification. Inland carrier transit managed directly by SBA Transport Service.
+                  Vehicle documents and chassis information can be reviewed when available. Domestic transport can be arranged according to the agreed service scope.
                 </p>
               </div>
 
