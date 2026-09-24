@@ -25,7 +25,7 @@ export default function ExportPage() {
             International Vehicle Export & Logistics
           </h1>
           <p className="text-sm text-slate-400 mt-3 leading-relaxed">
-            SBA合同会社 ensures compliant, insured, and timely shipping from Japanese departure harbors to destination ports on six continents.
+            SBA合同会社 provides export and shipping coordination according to vehicle, destination-country requirements and carrier availability.
           </p>
         </div>
 
@@ -34,7 +34,7 @@ export default function ExportPage() {
           <div className="glass-panel p-8 rounded-3xl border border-white/10 space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-xs uppercase font-bold text-japan-red tracking-wider">Method A</span>
-              <span className="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 text-[11px] font-bold">Most Cost-Effective</span>
+              <span className="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 text-[11px] font-bold">Common Option</span>
             </div>
             <h3 className="text-2xl font-black text-white">Ro-Ro (Roll-on / Roll-off)</h3>
             <p className="text-xs text-slate-300 leading-relaxed">
@@ -43,15 +43,15 @@ export default function ExportPage() {
             <ul className="space-y-2 text-xs text-slate-400 pt-2">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-japan-red shrink-0" />
-                <span>Lowest ocean freight cost per vehicle</span>
+                <span>Often used for standard vehicle shipments</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-japan-red shrink-0" />
-                <span>Frequent weekly sailing schedules to major ports</span>
+                <span>Sailing schedules depend on route and carrier availability</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-japan-red shrink-0" />
-                <span>Rapid port turnaround upon arrival</span>
+                <span>Arrival handling depends on the destination port</span>
               </li>
             </ul>
           </div>
@@ -59,7 +59,7 @@ export default function ExportPage() {
           <div className="glass-panel p-8 rounded-3xl border border-white/10 space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-xs uppercase font-bold text-japan-red tracking-wider">Method B</span>
-              <span className="px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-400 text-[11px] font-bold">Ultimate Protection</span>
+              <span className="px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-400 text-[11px] font-bold">Alternative Option</span>
             </div>
             <h3 className="text-2xl font-black text-white">Containerized Shipping (20ft / 40ft)</h3>
             <p className="text-xs text-slate-300 leading-relaxed">
@@ -68,7 +68,7 @@ export default function ExportPage() {
             <ul className="space-y-2 text-xs text-slate-400 pt-2">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-japan-red shrink-0" />
-                <span>Maximum protection against elements and port pilferage</span>
+                <span>Sealed container transport can be suitable for certain vehicles and cargo</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-japan-red shrink-0" />
@@ -76,7 +76,7 @@ export default function ExportPage() {
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-japan-red shrink-0" />
-                <span>Access to inland and smaller destination ports without Ro-Ro berths</span>
+                <span>Port and inland options depend on the route and carrier</span>
               </li>
             </ul>
           </div>
