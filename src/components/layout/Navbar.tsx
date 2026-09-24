@@ -75,6 +75,9 @@ export default function Navbar() {
             </button>
             {currencyDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 rounded-lg bg-obsidian-900 border border-white/15 shadow-xl py-1 z-50" onClick={() => setCurrencyDropdownOpen(false)}>
+                <div className="px-4 py-2 text-[10px] text-slate-500 border-b border-white/5">
+                  {ratesReady ? `Rates updated: ${ratesDate || 'latest available'}` : 'Current rates loading...'}
+                </div>
                 {(Object.keys(CURRENCY_CONFIGS) as SupportedCurrency[]).map((code) => (
                   <button key={code} onClick={() => setCurrency(code)} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between transition-colors ${currency === code ? 'bg-japan-red/20 text-japan-red font-bold' : 'text-slate-300 hover:bg-white/5'}`}>
                     <span>{CURRENCY_CONFIGS[code].label}</span><span className="font-mono text-slate-400">{CURRENCY_CONFIGS[code].symbol}</span>
