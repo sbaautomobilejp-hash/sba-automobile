@@ -42,7 +42,7 @@ export async function GET() {
         base: 'JPY',
         rates,
         date: rows[0]?.date ?? new Date().toISOString().slice(0, 10),
-        source: 'Frankfurter / European Central Bank reference data',
+        source: 'Frankfurter daily reference rates',
       },
       {
         headers: {
