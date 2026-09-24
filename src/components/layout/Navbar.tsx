@@ -10,7 +10,7 @@ import { Menu, X, Shield, MessageSquare, Globe, ChevronDown } from 'lucide-react
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
-  const { currency, setCurrency } = useCurrency();
+  const { currency, setCurrency, ratesDate, ratesReady } = useCurrency();
   const { language, setLanguage, t } = useLanguage();
 
   const whatsappNumber = '+818066651199';
