@@ -314,8 +314,8 @@ export default function CarDetailPage() {
                   <span className="font-mono font-bold text-emerald-400">{vehicle.auctionGrade || 'Grade 4.5'}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-white/5">
-                  <span className="text-slate-400">Export Readiness:</span>
-                  <span className="font-semibold text-white">Immediate Port Transit Ready</span>
+                  <span className="text-slate-400">Availability:</span>
+                  <span className="font-semibold text-white">{statusLabels[vehicle.status]}</span>
                 </div>
               </div>
             </div>
