@@ -464,6 +464,7 @@ export default function CarDetailPage() {
         vehicle={vehicle}
         isOpen={inquiryModalOpen}
         onClose={() => setInquiryModalOpen(false)}
+        defaultCountry={destinationPort}
       />
 
       <Footer />
