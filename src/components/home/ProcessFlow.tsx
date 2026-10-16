@@ -15,13 +15,13 @@ export default function ProcessFlow() {
     ['02','確認・検査サポート','車両情報の確認','利用可能なオークションシートや車両情報を確認し、必要に応じて検査・翻訳をサポートします。',ClipboardCheck],
     ['03','見積・お支払い','正式なお取引','車両・輸送などの条件を確認し、合意した内容に基づいてお取引を進めます。',CreditCard],
     ['04','国内輸送・港への搬入','輸送手配','SBA Transport Serviceにより、車両の国内輸送や港への搬入について手配・調整します。',Truck],
-    ['05','輸出・書類','船積み・書類','仕向国の要件に応じて輸出手続き、船積み、必要書類の準備・案内を進めます。',Ship],
+    ['05','海外輸出（ご希望の場合）','船積み・書類','仕向国の要件に応じて輸出手続き、船積み、必要書類の準備・案内を進めます。',Ship],
   ] : [
     ['01','Select or Request','Stock / Custom Auction','Browse available vehicles or tell us your preferred model, year and budget for a sourcing request.',Search],
     ['02','Inspect & Review','Vehicle Information','We review available auction sheets and vehicle information, with inspection or translation support when required.',ClipboardCheck],
     ['03','Quote & Payment','Agreed Transaction','The vehicle price and purchase terms are reviewed first; shipping is optional and quoted separately when requested.',CreditCard],
     ['04','Transport & Port','Domestic Transport Coordination','SBA Transport Service coordinates domestic vehicle transport and delivery to the relevant port.',Truck],
-    ['05','Export & Documents','Shipping & Documentation','For overseas buyers, export procedures, shipping and required documents can be discussed according to destination-country requirements.',Ship],
+    ['05','Optional Export','Shipping & Documentation','For overseas buyers, export procedures, shipping and required documents can be discussed according to destination-country requirements.',Ship],
   ];
 
   return <section id="process" className="py-20 bg-obsidian-950 border-b border-white/10 relative">
