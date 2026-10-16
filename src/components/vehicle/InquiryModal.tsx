@@ -13,6 +13,7 @@ interface InquiryModalProps {
 }
 
 const POPULAR_COUNTRIES = [
+  'Japan (Domestic Purchase)',
   'United Kingdom',
   'New Zealand',
   'Australia',
@@ -46,7 +47,7 @@ export default function InquiryModal({
   const [customerName, setCustomerName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [country, setCountry] = useState('United Kingdom');
+  const [country, setCountry] = useState('Japan (Domestic Purchase)');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -108,10 +109,10 @@ export default function InquiryModal({
 
             <h3 className="text-2xl font-black text-white">Inquiry Received!</h3>
             <p className="text-sm text-slate-300 max-w-md mx-auto">
-              Thank you, <span className="text-white font-semibold">{customerName}</span>. Your vehicle export request for <span className="text-japan-red font-semibold">{vehicleTitle}</span> has been logged with SBA合同会社.
+              Thank you, <span className="text-white font-semibold">{customerName}</span>. Your vehicle purchase inquiry for <span className="text-japan-red font-semibold">{vehicleTitle}</span> has been received by SBA合同会社.
             </p>
             <p className="text-xs text-slate-400">
-              Our export specialists in Mito, Ibaraki will contact you within 24 hours with an official C&F/CIF quotation and auction inspection report.
+              Our team in Mito, Ibaraki will review your request and reply with available purchase, vehicle-documentation and (if requested) shipping details.
             </p>
 
             <div className="pt-4 flex flex-col gap-3">
@@ -144,7 +145,7 @@ export default function InquiryModal({
                 </span>
               </div>
               <h3 className="text-xl sm:text-2xl font-black text-white">
-                Request Export Quotation
+                Ask About Purchase / Export
               </h3>
               <p className="text-xs text-slate-400 mt-1">
                 Target Vehicle: <strong className="text-slate-200">{vehicleTitle}</strong>
@@ -204,7 +205,7 @@ export default function InquiryModal({
 
               <div>
                 <label className="block text-slate-300 font-semibold mb-1">
-                  Destination Country / Port *
+                  Purchase in Japan or Destination Country *
                 </label>
                 <select
                   value={country}
@@ -227,7 +228,7 @@ export default function InquiryModal({
                   rows={3}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Ask about CIF/C&F shipping rates, inspection certificates (JEVIC, JAAI), auction sheets, or payment terms..."
+                  placeholder="Tell us whether you plan to buy in Japan or export overseas, and include your budget or any questions about vehicle documents and shipping..."
                   className="w-full px-3.5 py-2.5 rounded-lg bg-obsidian-850 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-japan-red transition-colors resize-none"
                 />
               </div>
