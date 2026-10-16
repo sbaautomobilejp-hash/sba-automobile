@@ -412,10 +412,11 @@ export default function VehicleForm({ initialVehicle, isEditing = false }: Vehic
               onChange={(e: any) => setDriveType(e.target.value)}
               className="w-full px-3 py-2.5 rounded-xl bg-obsidian-850 border border-white/10 text-white focus:border-japan-red"
             >
-              <option value="4WD">4WD</option>
-              <option value="AWD">AWD</option>
-              <option value="RWD">RWD</option>
-              <option value="FWD">FWD</option>
+              <option value="2WD">2WD (Two-wheel drive)</option>
+              <option value="4WD">4WD (Four-wheel drive)</option>
+              <option value="AWD">AWD (All-wheel drive)</option>
+              <option value="RWD">RWD (Rear-wheel drive)</option>
+              <option value="FWD">FWD (Front-wheel drive)</option>
             </select>
           </div>
 
