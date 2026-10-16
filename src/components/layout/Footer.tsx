@@ -9,7 +9,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
   const { t } = useLanguage();
   const whatsappNumber = '+818066651199';
-  const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=Hello%20SBA%20Automobile,%20I%20am%20contacting%20regarding%20vehicle%20export.`;
+  const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=Hello%20SBA%20Automobile,%20I%20am%20interested%20in%20buying%20a%20vehicle%20or%20asking%20about%20export.`;
 
   return (
     <footer className="bg-obsidian-950 border-t border-white/10 text-slate-400 text-sm mt-24">
