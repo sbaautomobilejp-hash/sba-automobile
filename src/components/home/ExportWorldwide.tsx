@@ -22,7 +22,7 @@ export default function ExportWorldwide() {
       <div className="text-center max-w-3xl mx-auto mb-16">
         <div className="inline-flex items-center gap-2 mb-2"><span className="w-6 h-[2px] bg-japan-red" /><span className="text-xs uppercase tracking-[0.25em] text-japan-red font-bold">{ja ? '海外輸送ネットワーク' : 'Global Shipping Network'}</span><span className="w-6 h-[2px] bg-japan-red" /></div>
         <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">{ja ? '日本から世界各地への車両輸出' : 'Japan to Worldwide Vehicle Export'}</h2>
-        <p className="text-sm text-slate-400 mt-2">{ja ? '仕向国の要件と運送会社の対応状況に応じて、Ro-Roやコンテナなどの輸送方法をご案内します。' : 'Ro-Ro and container shipping options can be arranged according to destination-country requirements and current carrier availability.'}</p>
+        <p className="text-sm text-slate-400 mt-2">{ja ? '海外から購入されるお客様向けに、ご希望に応じて仕向国の要件や運送会社の対応状況を確認し、Ro-Roやコンテナなどの輸送方法をご案内します。' : 'Export is optional: if you are buying from overseas, Ro-Ro and container shipping options can be discussed according to destination-country requirements and carrier availability.'}</p>
       </div>
 
       <div className="mb-10 p-4 rounded-2xl glass-panel border border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
