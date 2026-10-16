@@ -46,7 +46,7 @@ export default function VehicleCard({ vehicle, onQuickInquire }: VehicleCardProp
         <div className="border-t border-white/10 pt-4 flex items-center justify-between">
           <div><span className="text-[10px] uppercase font-semibold text-slate-400 block tracking-wider">{vehicle.isDemo ? 'Sample Price' : 'Listed Price'}</span><span className="text-xl font-black text-white">{formatPrice(vehicle.price)}</span></div>
           <div className="flex items-center gap-2">
-            {onQuickInquire && vehicle.status !== 'sold' && <button onClick={() => onQuickInquire(vehicle)} className="px-3 py-2 text-xs font-semibold bg-obsidian-850 hover:bg-obsidian-800 text-slate-200 hover:text-white rounded-lg border border-white/10 transition-colors" title="Ask about buying this vehicle">Ask to Buy</button>}
+            {onQuickInquire && vehicle.status !== 'sold' && <button onClick={() => onQuickInquire(vehicle)} className="px-3 py-2 text-xs font-semibold bg-obsidian-850 hover:bg-obsidian-800 text-slate-200 hover:text-white rounded-lg border border-white/10 transition-colors" title={vehicle.isDemo ? 'Ask about a similar real vehicle' : 'Ask about buying this vehicle'}>{vehicle.isDemo ? 'Ask About Similar' : 'Ask to Buy'}</button>}
             <Link href={`/cars/${vehicle.slug}`} className="p-2 bg-japan-red hover:bg-red-700 text-white rounded-lg shadow-md shadow-japan-red/20 transition-all flex items-center justify-center" aria-label={`View full details of ${vehicle.year} ${vehicle.make} ${vehicle.model}`}><ArrowUpRight className="w-4 h-4" /></Link>
           </div>
         </div>
