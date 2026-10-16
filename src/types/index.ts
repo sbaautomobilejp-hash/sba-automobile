@@ -1,7 +1,7 @@
 export type VehicleStatus = 'available' | 'reserved' | 'sold';
 export type TransmissionType = 'Automatic' | 'Manual' | 'CVT' | 'DCT';
 export type FuelType = 'Petrol' | 'Diesel' | 'Hybrid' | 'Electric';
-export type DriveType = '4WD' | 'AWD' | 'RWD' | 'FWD';
+export type DriveType = '2WD' | '4WD' | 'AWD' | 'RWD' | 'FWD';
 export type SteeringType = 'RHD' | 'LHD';
 
 export interface Vehicle {
