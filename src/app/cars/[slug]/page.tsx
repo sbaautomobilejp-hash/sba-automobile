@@ -375,7 +375,8 @@ export default function CarDetailPage() {
                   onChange={(e) => setDestinationPort(e.target.value)}
                   className="w-full px-3 py-2.5 rounded-xl bg-obsidian-850 border border-white/10 text-white focus:outline-none focus:border-japan-red"
                 >
-                  <option value="Japan (Domestic Purchase)">Purchase in Japan (Domestic)</option>\n                  <option value="United Kingdom">Export to United Kingdom (Southampton)</option>
+                  <option value="Japan (Domestic Purchase)">Purchase in Japan (Domestic)</option>
+                  <option value="United Kingdom">Export to United Kingdom (Southampton)</option>
                   <option value="New Zealand">Export to New Zealand (Auckland)</option>
                   <option value="Kenya">Export to Kenya (Mombasa)</option>
                   <option value="Tanzania">Export to Tanzania (Dar es Salaam)</option>
