@@ -4,7 +4,7 @@ service firebase.storage {
   match /b/{bucket}/o {
     function isVerifiedAdmin() {
       return request.auth != null
-        && request.auth.token.email == 'admin@sba-automobile.jp'
+        && request.auth.token.email == 'shadowbrokers731@gmail.com'
         && request.auth.token.email_verified == true;
     }
 
