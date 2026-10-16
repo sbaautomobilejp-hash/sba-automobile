@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Vehicle } from '@/types';
 import { submitInquiry } from '@/lib/db';
 import { X, Send, MessageSquare, CheckCircle2, ShieldCheck, Globe } from 'lucide-react';
@@ -10,6 +10,7 @@ interface InquiryModalProps {
   isOpen: boolean;
   onClose: () => void;
   defaultVehicleName?: string;
+  defaultCountry?: string;
 }
 
 const POPULAR_COUNTRIES = [
@@ -43,11 +44,18 @@ export default function InquiryModal({
   isOpen,
   onClose,
   defaultVehicleName,
+  defaultCountry,
 }: InquiryModalProps) {
   const [customerName, setCustomerName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [country, setCountry] = useState('Japan (Domestic Purchase)');
+  const [country, setCountry] = useState(defaultCountry || 'Japan (Domestic Purchase)');
+
+  useEffect(() => {
+    if (isOpen && defaultCountry && POPULAR_COUNTRIES.includes(defaultCountry)) {
+      setCountry(defaultCountry);
+    }
+  }, [isOpen, defaultCountry]);
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
