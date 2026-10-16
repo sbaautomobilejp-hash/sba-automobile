@@ -38,7 +38,7 @@ export default function CarDetailPage() {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [destinationPort, setDestinationPort] = useState('Southampton (UK)');
+  const [destinationPort, setDestinationPort] = useState('Japan (Domestic Purchase)');
 
   const { formatPrice } = useCurrency();
 
@@ -82,7 +82,7 @@ export default function CarDetailPage() {
             <AlertCircle className="w-12 h-12 text-japan-red mx-auto mb-4" />
             <h2 className="text-2xl font-black text-white">Vehicle Not Found</h2>
             <p className="text-xs text-slate-400 mt-2 mb-6">
-              The requested vehicle listing may have been exported or the URL has changed.
+              This vehicle may have been sold or its listing URL may have changed.
             </p>
             <Link
               href="/#inventory"
@@ -106,7 +106,7 @@ export default function CarDetailPage() {
   };
 
   const statusLabels = {
-    available: 'Available',
+    available: 'Available For Sale',
     reserved: 'Reserved',
     sold: 'Sold',
   };
@@ -361,29 +361,29 @@ export default function CarDetailPage() {
                   {formatPrice(vehicle.price)}
                 </div>
                 <p className="text-[11px] text-slate-400 mt-1">
-                  Final pricing, export charges, documentation and terminal fees are confirmed according to the vehicle and destination.
+                  Displayed price is the listed vehicle price. Any domestic delivery, export, shipping or documentation charges are discussed separately based on your request.
                 </p>
               </div>
 
               {/* Destination Port Estimator */}
               <div className="space-y-3 text-xs">
                 <label className="block font-bold text-slate-300 uppercase tracking-wider text-[11px]">
-                  Select Destination Discharge Port:
+                  How would you like to buy this vehicle?
                 </label>
                 <select
                   value={destinationPort}
                   onChange={(e) => setDestinationPort(e.target.value)}
                   className="w-full px-3 py-2.5 rounded-xl bg-obsidian-850 border border-white/10 text-white focus:outline-none focus:border-japan-red"
                 >
-                  <option value="Southampton (UK)">Southampton (United Kingdom)</option>
-                  <option value="Auckland (NZ)">Auckland (New Zealand)</option>
-                  <option value="Mombasa (Kenya)">Mombasa (Kenya)</option>
-                  <option value="Dar es Salaam (Tanzania)">Dar es Salaam (Tanzania)</option>
-                  <option value="Durban (South Africa)">Durban (South Africa)</option>
-                  <option value="Melbourne (Australia)">Melbourne (Australia)</option>
-                  <option value="Jebel Ali (UAE)">Jebel Ali / Dubai (UAE)</option>
-                  <option value="Kingston (Jamaica)">Kingston (Jamaica)</option>
-                  <option value="Limassol (Cyprus)">Limassol (Cyprus)</option>
+                  <option value="Japan (Domestic Purchase)">Purchase in Japan (Domestic)</option>\n                  <option value="United Kingdom">Export to United Kingdom (Southampton)</option>
+                  <option value="New Zealand">Export to New Zealand (Auckland)</option>
+                  <option value="Kenya">Export to Kenya (Mombasa)</option>
+                  <option value="Tanzania">Export to Tanzania (Dar es Salaam)</option>
+                  <option value="South Africa">Export to South Africa (Durban)</option>
+                  <option value="Australia">Export to Australia (Melbourne)</option>
+                  <option value="United Arab Emirates">Export to UAE (Jebel Ali / Dubai)</option>
+                  <option value="Jamaica">Export to Jamaica (Kingston)</option>
+                  <option value="Cyprus">Export to Cyprus (Limassol)</option>
                 </select>
 
                 <div className="p-3 bg-obsidian-850 rounded-xl border border-white/5 text-[11px] space-y-1.5 text-slate-300">
@@ -410,7 +410,7 @@ export default function CarDetailPage() {
                   className="w-full py-4 px-6 rounded-xl bg-japan-red hover:bg-red-700 disabled:opacity-50 text-white font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-xl shadow-japan-red/30 transition-all"
                 >
                   <Ship className="w-4 h-4" />
-                  <span>Request Full Export Quotation</span>
+                  <span>Ask About Buying / Exporting</span>
                 </button>
 
                 <a
