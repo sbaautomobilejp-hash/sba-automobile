@@ -157,7 +157,7 @@ export default function CarDetailPage() {
             </span>
             <div className="text-left sm:text-right">
               <span className="text-[10px] uppercase tracking-wider text-slate-400 block">
-                Listed Vehicle Price
+                {vehicle.isDemo ? 'Sample Price (Illustrative)' : 'Listed Vehicle Price'}
               </span>
               <span className="text-3xl font-black text-white">
                 {formatPrice(vehicle.price)}
