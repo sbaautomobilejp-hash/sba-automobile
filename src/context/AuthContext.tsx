@@ -22,6 +22,8 @@ interface AuthContextType {
   isFirebaseActive: boolean;
 }
 
+const ADMIN_EMAIL = 'admin@sba-automobile.jp';
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -53,6 +55,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     try {
       const cred = await signInWithEmailAndPassword(auth, email.trim(), pass);
+      if (cred.user.email?.toLowerCase() !== ADMIN_EMAIL) {
+        await fbSignOut(auth);
+        throw new Error(`Only ${ADMIN_EMAIL} can access the admin portal.`);
+      }
       if (!cred.user.emailVerified) {
         await fbSignOut(auth);
         throw new Error('Please verify the admin email address before signing in.');
