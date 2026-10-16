@@ -14,7 +14,7 @@ export default function Navbar() {
   const { language, setLanguage, t } = useLanguage();
 
   const whatsappNumber = '+818066651199';
-  const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=Hello%20SBA%20Automobile,%20I%20am%20interested%20in%20importing%20a%20vehicle%20from%20Japan.`;
+  const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=Hello%20SBA%20Automobile,%20I%20am%20interested%20in%20buying%20a%20vehicle%20in%20Japan%20or%20asking%20about%20export.`;
 
   return (
     <header className="sticky top-0 z-50 w-full bg-obsidian-950/90 backdrop-blur-md border-b border-white/10 transition-all">
