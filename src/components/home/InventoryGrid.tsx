@@ -62,9 +62,9 @@ export default function InventoryGrid({ initialVehicles = [] }: InventoryGridPro
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-2"><span className="w-6 h-[2px] bg-japan-red" /><span className="text-xs uppercase tracking-[0.25em] text-japan-red font-bold">{ja ? '車両在庫・輸出' : 'Direct Stock & Export Inventory'}</span></div>
+            <div className="flex items-center gap-2 mb-2"><span className="w-6 h-[2px] bg-japan-red" /><span className="text-xs uppercase tracking-[0.25em] text-japan-red font-bold">{ja ? '車両販売・在庫' : 'Vehicles For Sale'}</span></div>
             <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">{ja ? '販売可能な車両' : 'Available Vehicles'}</h2>
-            <p className="text-sm text-slate-400 mt-1 max-w-2xl">{ja ? '現在取り扱い可能な車両をご覧いただけます。車両情報やオークション書類の確認についてもご相談ください。' : 'Browse vehicles currently available through SBA. Vehicle information and auction documentation can be reviewed when available.'}</p>
+            <p className="text-sm text-slate-400 mt-1 max-w-2xl">{ja ? '販売中の車両をご覧ください。日本国内での購入、海外からの購入、輸出・輸送についてもご相談いただけます。' : 'Browse vehicles listed for sale. Ask us about purchasing in Japan, international buying, or export and delivery options.'}</p>
           </div>
           <span className="text-xs font-mono text-slate-400">{ja ? '表示台数' : 'Showing'} <strong className="text-white">{filteredVehicles.length}</strong> {ja ? '台' : 'vehicles'}</span>
         </div>
