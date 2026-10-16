@@ -57,11 +57,9 @@ Admin URL:
 `/admin/login`
 
 Create the administrator in Firebase Authentication using **Email/Password**. The included Firestore and Storage rules currently authorize the email:
-`admin@sba-automobile.jp`
+`shadowbrokers731@gmail.com`
 
-If you want a different admin email, change it in both:
-- `firestore.rules`
-- `storage.rules`
+The same verified admin email must be used consistently in `src/context/AuthContext.tsx`, `src/app/api/upload/route.ts`, `firestore.rules`, and `storage.rules`.
 
 > Important: Firebase Web configuration values are client-side configuration, not server secrets. The real protection comes from Firebase Authentication + Firestore/Storage Security Rules. Never add a Firebase service-account private key to this project.
 
