@@ -6,16 +6,16 @@ import { AuthProvider } from '@/context/AuthContext';
 import { LanguageProvider } from '@/context/LanguageContext';
 
 export const metadata: Metadata = {
-  title: 'SBA Automobile & SBA Transport Service | Japanese Vehicle Export',
+  title: 'SBA Automobile | Japanese Vehicles for Sale in Japan & Worldwide',
   description:
-    'SBA合同会社 - Japanese vehicle sourcing, transport coordination and worldwide export support from Mito, Ibaraki, Japan.',
+    'SBA合同会社 - Browse Japanese vehicles for sale, ask about domestic purchase in Japan, and request optional export and transport support from Mito, Ibaraki.',
   keywords: [
-    'SBA Automobile', 'SBA Transport Service', 'SBA合同会社', 'Japanese Car Export',
-    'Buy Cars From Japan', 'JDM Export', 'Mito Ibaraki Car Export',
+    'SBA Automobile', 'SBA Transport Service', 'SBA合同会社', 'Japanese Cars for Sale',
+    'Buy Cars in Japan', 'Buy Cars From Japan', 'Domestic Vehicle Sales', 'Japanese Car Export',
   ],
   openGraph: {
-    title: 'SBA Automobile & SBA Transport Service | Japanese Vehicle Export',
-    description: 'Japanese vehicle sourcing, transport coordination and worldwide export support from Mito, Ibaraki.',
+    title: 'SBA Automobile | Japanese Vehicles for Sale in Japan & Worldwide',
+    description: 'Japanese vehicles for sale in Japan and overseas, with optional export and transport support from Mito, Ibaraki.',
     type: 'website',
   },
 };
