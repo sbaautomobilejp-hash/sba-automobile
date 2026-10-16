@@ -19,9 +19,9 @@ export default function ProcessFlow() {
   ] : [
     ['01','Select or Request','Stock / Custom Auction','Browse available vehicles or tell us your preferred model, year and budget for a sourcing request.',Search],
     ['02','Inspect & Review','Vehicle Information','We review available auction sheets and vehicle information, with inspection or translation support when required.',ClipboardCheck],
-    ['03','Quote & Payment','Agreed Transaction','Vehicle and shipping terms are confirmed before the transaction proceeds according to the agreed conditions.',CreditCard],
+    ['03','Quote & Payment','Agreed Transaction','The vehicle price and purchase terms are reviewed first; shipping is optional and quoted separately when requested.',CreditCard],
     ['04','Transport & Port','Domestic Transport Coordination','SBA Transport Service coordinates domestic vehicle transport and delivery to the relevant port.',Truck],
-    ['05','Export & Documents','Shipping & Documentation','Export procedures, shipping and required documents are arranged according to destination-country requirements.',Ship],
+    ['05','Export & Documents','Shipping & Documentation','For overseas buyers, export procedures, shipping and required documents can be discussed according to destination-country requirements.',Ship],
   ];
 
   return <section id="process" className="py-20 bg-obsidian-950 border-b border-white/10 relative">
@@ -33,7 +33,7 @@ export default function ProcessFlow() {
           <span className="w-6 h-[2px] bg-japan-red" />
         </div>
         <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">{ja ? 'ご利用の流れ' : 'How The Buying Process Works'}</h2>
-        <p className="text-sm text-slate-400 mt-2">{ja ? '車両調達、国内輸送、輸出手配を一つの窓口でご相談いただけます。' : 'Discuss vehicle sourcing, domestic transport and export coordination through one contact point.'}</p>
+        <p className="text-sm text-slate-400 mt-2">{ja ? '日本国内での車両購入も、海外からの購入相談も可能です。輸出・輸送はご希望に応じてご相談いただけます。' : 'Buy a listed vehicle in Japan or ask about overseas purchase. Export and shipping support are optional services.'}</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {steps.map(([step, title, subtitle, desc, Icon]) => (
