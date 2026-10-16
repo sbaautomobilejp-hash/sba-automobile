@@ -4,58 +4,60 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const QUOTES = ['USD', 'EUR', 'GBP', 'AUD', 'BDT'] as const;
-const MAX_RATE_AGE_SECONDS = 48 * 60 * 60;
+const MAX_RATE_AGE_DAYS = 3;
+
+type DailyRatesPayload = {
+  date?: string;
+  jpy?: Record<string, number>;
+};
+
+async function fetchRates(url: string): Promise<DailyRatesPayload> {
+  const response = await fetch(url, {
+    cache: 'no-store',
+    headers: { Accept: 'application/json' },
+    signal: AbortSignal.timeout(8000),
+  });
+  if (!response.ok) throw new Error(`Rate provider returned HTTP ${response.status}`);
+  return (await response.json()) as DailyRatesPayload;
+}
 
 export async function GET() {
   try {
-    const response = await fetch('https://open.er-api.com/v6/latest/JPY', {
-      cache: 'no-store',
-      headers: { Accept: 'application/json' },
-      signal: AbortSignal.timeout(8000),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Exchange-rate provider returned HTTP ${response.status}`);
+    let payload: DailyRatesPayload;
+    try {
+      payload = await fetchRates(
+        'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/jpy.json'
+      );
+    } catch (primaryError) {
+      console.warn('Primary exchange-rate CDN failed; trying fallback:', primaryError);
+      payload = await fetchRates('https://latest.currency-api.pages.dev/v1/currencies/jpy.json');
     }
 
-    const payload = (await response.json()) as {
-      result?: string;
-      base_code?: string;
-      time_last_update_unix?: number;
-      time_last_update_utc?: string;
-      rates?: Record<string, number>;
-    };
-
-    if (payload.result !== 'success' || payload.base_code !== 'JPY' || !payload.rates) {
+    if (!payload.date || !payload.jpy) {
       throw new Error('Exchange-rate provider returned an invalid payload');
     }
 
-    const updatedAt = Number(payload.time_last_update_unix);
-    const ageSeconds = Math.floor(Date.now() / 1000) - updatedAt;
-    if (!Number.isFinite(updatedAt) || ageSeconds < -3600 || ageSeconds > MAX_RATE_AGE_SECONDS) {
-      throw new Error('Exchange rates are stale or have an invalid update timestamp');
+    const rateDate = new Date(`${payload.date}T00:00:00Z`);
+    const ageDays = (Date.now() - rateDate.getTime()) / 86_400_000;
+    if (!Number.isFinite(rateDate.getTime()) || ageDays < -1 || ageDays > MAX_RATE_AGE_DAYS) {
+      throw new Error('Exchange rates are stale or have an invalid date');
     }
 
     const rates: Record<string, number> = { JPY: 1 };
     for (const code of QUOTES) {
-      const rate = Number(payload.rates[code]);
+      const rate = Number(payload.jpy[code.toLowerCase()]);
       if (!Number.isFinite(rate) || rate <= 0) {
         throw new Error(`Missing or invalid exchange rate for ${code}`);
       }
       rates[code] = rate;
     }
 
-    const date = payload.time_last_update_utc
-      ? new Date(payload.time_last_update_utc).toISOString().slice(0, 10)
-      : new Date(updatedAt * 1000).toISOString().slice(0, 10);
-
     return NextResponse.json(
       {
         base: 'JPY',
         rates,
-        date,
-        source: 'ExchangeRate-API daily rates',
-        updatedAt: new Date(updatedAt * 1000).toISOString(),
+        date: payload.date,
+        source: 'Daily reference rates from fawazahmed0/exchange-api',
       },
       {
         headers: {
