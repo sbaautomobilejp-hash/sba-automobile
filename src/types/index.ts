@@ -48,7 +48,7 @@ export interface Inquiry {
   createdAt: string;
 }
 
-export type SupportedCurrency = 'JPY' | 'USD' | 'EUR' | 'GBP' | 'AUD';
+export type SupportedCurrency = 'JPY' | 'USD' | 'EUR' | 'GBP' | 'AUD' | 'BDT';
 
 export interface CurrencyConfig {
   code: SupportedCurrency;
