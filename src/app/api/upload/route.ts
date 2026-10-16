@@ -3,9 +3,42 @@ import { NextResponse } from 'next/server';
 export const runtime = 'nodejs';
 
 const MAX_UPLOAD_BYTES = 16 * 1024 * 1024;
+const FIREBASE_API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+
+async function verifyVerifiedFirebaseUser(request: Request): Promise<boolean> {
+  const authorization = request.headers.get('authorization');
+  const token = authorization?.match(/^Bearer\s+(.+)$/i)?.[1];
+
+  if (!token || !FIREBASE_API_KEY) return false;
+
+  // Firebase Identity Toolkit validates the ID token signature and expiry.
+  const response = await fetch(
+    `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${encodeURIComponent(FIREBASE_API_KEY)}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken: token }),
+      cache: 'no-store',
+    }
+  );
+
+  if (!response.ok) return false;
+  const payload = await response.json().catch(() => null);
+  const user = payload?.users?.[0];
+
+  return Boolean(user?.localId && user?.emailVerified === true);
+}
 
 export async function POST(request: Request) {
   try {
+    const authorized = await verifyVerifiedFirebaseUser(request);
+    if (!authorized) {
+      return NextResponse.json(
+        { error: 'Please sign in with a verified admin account before uploading images.' },
+        { status: 401 }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get('file');
 
