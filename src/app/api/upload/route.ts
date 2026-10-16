@@ -4,11 +4,11 @@ export const runtime = 'nodejs';
 
 const MAX_UPLOAD_BYTES = 16 * 1024 * 1024;
 const FIREBASE_API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
-const ADMIN_EMAIL = 'admin@sba-automobile.jp';
+const ADMIN_EMAIL = 'shadowbrokers731@gmail.com';
 
 async function verifyVerifiedFirebaseUser(request: Request): Promise<boolean> {
   const authorization = request.headers.get('authorization');
-  const token = authorization?.match(/^Bearer\s+(.+)$/i)?.[1];
+  const token = authorization?.match(/^Bearer\\s+(.+)$/i)?.[1];
 
   if (!token || !FIREBASE_API_KEY) return false;
 
