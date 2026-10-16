@@ -411,7 +411,7 @@ export default function CarDetailPage() {
                   className="w-full py-4 px-6 rounded-xl bg-japan-red hover:bg-red-700 disabled:opacity-50 text-white font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-xl shadow-japan-red/30 transition-all"
                 >
                   <Ship className="w-4 h-4" />
-                  <span>Ask About Buying / Exporting</span>
+                  <span>{vehicle.isDemo ? 'Ask About a Similar Vehicle' : 'Ask About Buying / Exporting'}</span>
                 </button>
 
                 <a
