@@ -4,6 +4,7 @@ export const runtime = 'nodejs';
 
 const MAX_UPLOAD_BYTES = 16 * 1024 * 1024;
 const FIREBASE_API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+const ADMIN_EMAIL = 'admin@sba-automobile.jp';
 
 async function verifyVerifiedFirebaseUser(request: Request): Promise<boolean> {
   const authorization = request.headers.get('authorization');
@@ -26,7 +27,12 @@ async function verifyVerifiedFirebaseUser(request: Request): Promise<boolean> {
   const payload = await response.json().catch(() => null);
   const user = payload?.users?.[0];
 
-  return Boolean(user?.localId && user?.emailVerified === true);
+  return Boolean(
+    user?.localId &&
+    user?.emailVerified === true &&
+    typeof user?.email === 'string' &&
+    user.email.toLowerCase() === ADMIN_EMAIL
+  );
 }
 
 export async function POST(request: Request) {
