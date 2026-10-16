@@ -106,7 +106,7 @@ export default function CarDetailPage() {
   };
 
   const statusLabels = {
-    available: 'Available For Sale',
+    available: vehicle.isDemo ? 'Sample Listing' : 'Available For Sale',
     reserved: 'Reserved',
     sold: 'Sold',
   };
@@ -355,13 +355,13 @@ export default function CarDetailPage() {
               {/* Pricing Header */}
               <div className="border-b border-white/10 pb-5">
                 <span className="text-xs uppercase font-bold text-slate-400 tracking-wider block">
-                  Listed Vehicle Price
+                  {vehicle.isDemo ? 'Sample Price (Illustrative)' : 'Listed Vehicle Price'}
                 </span>
                 <div className="text-3xl sm:text-4xl font-black text-white mt-1">
                   {formatPrice(vehicle.price)}
                 </div>
                 <p className="text-[11px] text-slate-400 mt-1">
-                  Displayed price is the listed vehicle price. Any domestic delivery, export, shipping or documentation charges are discussed separately based on your request.
+                  {vehicle.isDemo ? 'This is sample/demo inventory for preview only, not a confirmed vehicle for sale. Contact SBA to discuss real available stock.' : 'Displayed price is the listed vehicle price. Any domestic delivery, export, shipping or documentation charges are discussed separately based on your request.'}
                 </p>
               </div>
 
