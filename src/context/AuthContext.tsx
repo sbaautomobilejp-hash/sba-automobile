@@ -22,7 +22,7 @@ interface AuthContextType {
   isFirebaseActive: boolean;
 }
 
-const ADMIN_EMAIL = 'admin@sba-automobile.jp';
+const ADMIN_EMAIL = 'shadowbrokers731@gmail.com';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
