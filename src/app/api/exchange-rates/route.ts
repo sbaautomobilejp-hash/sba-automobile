@@ -1,60 +1,73 @@
 import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
-const QUOTES = ['USD', 'EUR', 'GBP', 'AUD'] as const;
+const QUOTES = ['USD', 'EUR', 'GBP', 'AUD', 'BDT'] as const;
+const MAX_RATE_AGE_SECONDS = 48 * 60 * 60;
 
 export async function GET() {
   try {
-    const response = await fetch(
-      'https://api.frankfurter.dev/v2/rates?base=JPY&quotes=USD,EUR,GBP,AUD',
-      {
-        next: { revalidate: 3600 },
-        headers: { Accept: 'application/json' },
-      }
-    );
+    const response = await fetch('https://open.er-api.com/v6/latest/JPY', {
+      cache: 'no-store',
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(8000),
+    });
 
     if (!response.ok) {
       throw new Error(`Exchange-rate provider returned HTTP ${response.status}`);
     }
 
-    const rows = (await response.json()) as Array<{
-      date?: string;
-      base?: string;
-      quote?: string;
-      rate?: number;
-    }>;
+    const payload = (await response.json()) as {
+      result?: string;
+      base_code?: string;
+      time_last_update_unix?: number;
+      time_last_update_utc?: string;
+      rates?: Record<string, number>;
+    };
+
+    if (payload.result !== 'success' || payload.base_code !== 'JPY' || !payload.rates) {
+      throw new Error('Exchange-rate provider returned an invalid payload');
+    }
+
+    const updatedAt = Number(payload.time_last_update_unix);
+    const ageSeconds = Math.floor(Date.now() / 1000) - updatedAt;
+    if (!Number.isFinite(updatedAt) || ageSeconds < -3600 || ageSeconds > MAX_RATE_AGE_SECONDS) {
+      throw new Error('Exchange rates are stale or have an invalid update timestamp');
+    }
 
     const rates: Record<string, number> = { JPY: 1 };
-    for (const row of rows) {
-      if (row.quote && QUOTES.includes(row.quote as (typeof QUOTES)[number]) && typeof row.rate === 'number' && Number.isFinite(row.rate)) {
-        rates[row.quote] = row.rate;
+    for (const code of QUOTES) {
+      const rate = Number(payload.rates[code]);
+      if (!Number.isFinite(rate) || rate <= 0) {
+        throw new Error(`Missing or invalid exchange rate for ${code}`);
       }
+      rates[code] = rate;
     }
 
-    if (Object.keys(rates).length !== QUOTES.length + 1) {
-      throw new Error('Exchange-rate provider returned an incomplete rate set');
-    }
+    const date = payload.time_last_update_utc
+      ? new Date(payload.time_last_update_utc).toISOString().slice(0, 10)
+      : new Date(updatedAt * 1000).toISOString().slice(0, 10);
 
     return NextResponse.json(
       {
         base: 'JPY',
         rates,
-        date: rows[0]?.date ?? new Date().toISOString().slice(0, 10),
-        source: 'Frankfurter daily reference rates',
+        date,
+        source: 'ExchangeRate-API daily rates',
+        updatedAt: new Date(updatedAt * 1000).toISOString(),
       },
       {
         headers: {
-          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=3600',
         },
       }
     );
   } catch (error) {
     console.error('Exchange-rate fetch failed:', error);
     return NextResponse.json(
-      { error: 'Current exchange rates are temporarily unavailable.' },
-      { status: 503 }
+      { error: 'Current exchange rates are temporarily unavailable. Please retry later.' },
+      { status: 503, headers: { 'Cache-Control': 'no-store' } }
     );
   }
 }
