@@ -1,6 +1,6 @@
 import { Vehicle, Inquiry, VehicleStatus, InquiryStatus } from '@/types';
 import { INITIAL_DEMO_VEHICLES, INITIAL_DEMO_INQUIRIES } from './demoData';
-import { isFirebaseConfigured, firestore } from './firebase';
+import { isFirebaseConfigured, firestore, auth } from './firebase';
 import {
   collection,
   doc,
@@ -144,6 +144,12 @@ export async function uploadVehicleImage(file: File, vehicleId: string): Promise
   const { blob, dataUrl } = await compressImage(file, 1600, 1200, 0.82);
   if (!isFirebaseConfigured) return dataUrl;
 
+  const currentUser = auth?.currentUser;
+  if (!currentUser) {
+    throw new Error('Please sign in to the admin account before uploading vehicle photos.');
+  }
+  const idToken = await currentUser.getIdToken();
+
   const formData = new FormData();
   formData.append('file', new File([blob], file.name.replace(/[^a-zA-Z0-9.-]/g, '_'), { type: 'image/jpeg' }));
   formData.append('vehicleId', vehicleId);
@@ -152,6 +158,7 @@ export async function uploadVehicleImage(file: File, vehicleId: string): Promise
     method: 'POST',
     body: formData,
     credentials: 'same-origin',
+    headers: { Authorization: `Bearer ${idToken}` },
   });
 
   const payload = await response.json().catch(() => null);
