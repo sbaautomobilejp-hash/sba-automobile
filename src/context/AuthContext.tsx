@@ -38,8 +38,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const unsubscribe = onAuthStateChanged(auth, (fbUser: FirebaseUser | null) => {
-      const isAdmin =
-        fbUser?.email?.toLowerCase() === ADMIN_EMAIL && fbUser.emailVerified;
+      const isAdmin = Boolean(
+        fbUser && fbUser.email?.toLowerCase() === ADMIN_EMAIL && fbUser.emailVerified
+      );
       setUser(isAdmin && fbUser ? { uid: fbUser.uid, email: fbUser.email } : null);
       setIsLoading(false);
     });
