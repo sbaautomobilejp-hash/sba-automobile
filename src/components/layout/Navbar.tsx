@@ -40,16 +40,16 @@ export default function Navbar() {
       </div>
 
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-11 h-11 rounded-lg bg-japan-lacquer border border-japan-red/60 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-japan-red/20 group-hover:scale-105 transition-transform">
+        <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3 group">
+          <div className="w-9 h-9 sm:w-11 sm:h-11 shrink-0 rounded-lg bg-japan-lacquer border border-japan-red/60 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-japan-red/20 group-hover:scale-105 transition-transform">
             <span className="tracking-tighter">SBA</span>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xl font-bold tracking-wider text-white group-hover:text-slate-100 uppercase">SBA Automobile</span>
-              <span className="px-1.5 py-0.5 text-[10px] font-bold bg-japan-red text-white rounded uppercase tracking-widest">JAPAN</span>
+              <span className="text-[15px] sm:text-xl font-bold tracking-normal sm:tracking-wider text-white group-hover:text-slate-100 uppercase whitespace-nowrap">SBA Automobile</span>
+              <span className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-bold bg-japan-red text-white rounded uppercase tracking-widest">JAPAN</span>
             </div>
-            <p className="text-[11px] tracking-widest text-slate-400 uppercase font-medium">SBA Transport Service • SBA合同会社</p>
+            <p className="hidden sm:block text-[11px] tracking-widest text-slate-400 uppercase font-medium">SBA Transport Service • SBA合同会社</p>
           </div>
         </Link>
 
@@ -90,13 +90,13 @@ export default function Navbar() {
           <Link href="/#inquiry" className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider bg-japan-red hover:bg-red-700 text-white rounded-md shadow-lg shadow-japan-red/25 transition-all">{t('inquireNow')}</Link>
         </div>
 
-        <div className="flex md:hidden items-center gap-2">
+        <div className="flex md:hidden shrink-0 items-center gap-1 sm:gap-2">
           <div className="inline-flex items-center rounded bg-obsidian-850 border border-white/10 p-0.5">
-            <button onClick={() => setLanguage('en')} className={`px-2 py-1 text-[10px] font-bold rounded ${language === 'en' ? 'bg-japan-red text-white' : 'text-slate-400'}`}>EN</button>
+            <button onClick={() => setLanguage('en')} className={`px-1.5 sm:px-2 py-1 text-[9px] sm:text-[10px] font-bold rounded ${language === 'en' ? 'bg-japan-red text-white' : 'text-slate-400'}`}>EN</button>
             <button onClick={() => setLanguage('ja')} className={`px-2 py-1 text-[10px] font-bold rounded ${language === 'ja' ? 'bg-japan-red text-white' : 'text-slate-400'}`}>日本語</button>
           </div>
-          <button onClick={() => { const keys = Object.keys(CURRENCY_CONFIGS) as SupportedCurrency[]; setCurrency(keys[(keys.indexOf(currency) + 1) % keys.length]); }} className="px-2.5 py-1 text-xs font-bold rounded bg-obsidian-850 border border-white/10 text-japan-red">{currency}</button>
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 text-slate-300 hover:text-white rounded-md bg-obsidian-850 border border-white/10" aria-label="Toggle Navigation Menu">
+          <button onClick={() => { const keys = Object.keys(CURRENCY_CONFIGS) as SupportedCurrency[]; setCurrency(keys[(keys.indexOf(currency) + 1) % keys.length]); }} className="px-2 py-1 text-[10px] sm:text-xs font-bold rounded bg-obsidian-850 border border-white/10 text-japan-red">{currency}</button>
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-1.5 sm:p-2 text-slate-300 hover:text-white rounded-md bg-obsidian-850 border border-white/10" aria-label="Toggle Navigation Menu">
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
