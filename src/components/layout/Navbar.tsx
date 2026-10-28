@@ -95,7 +95,7 @@ export default function Navbar() {
             <button onClick={() => setLanguage('en')} className={`px-1.5 sm:px-2 py-1 text-[9px] sm:text-[10px] font-bold rounded ${language === 'en' ? 'bg-japan-red text-white' : 'text-slate-400'}`}>EN</button>
             <button onClick={() => setLanguage('ja')} className={`px-2 py-1 text-[10px] font-bold rounded ${language === 'ja' ? 'bg-japan-red text-white' : 'text-slate-400'}`}>日本語</button>
           </div>
-          <button onClick={() => { const keys = Object.keys(CURRENCY_CONFIGS) as SupportedCurrency[]; setCurrency(keys[(keys.indexOf(currency) + 1) % keys.length]); }} className="px-2 py-1 text-[10px] sm:text-xs font-bold rounded bg-obsidian-850 border border-white/10 text-japan-red">{currency}</button>
+          <button onClick={() => { const keys = Object.keys(CURRENCY_CONFIGS) as SupportedCurrency[]; setCurrency(keys[(keys.indexOf(currency) + 1) % keys.length]); }} className="hidden min-[360px]:inline-flex px-2 py-1 text-[10px] sm:text-xs font-bold rounded bg-obsidian-850 border border-white/10 text-japan-red">{currency}</button>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-1.5 sm:p-2 text-slate-300 hover:text-white rounded-md bg-obsidian-850 border border-white/10" aria-label="Toggle Navigation Menu">
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
