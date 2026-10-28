@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://vermillion-tanuki-c5d321.netlify.app';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sba-automobile.netlify.app';
 
 export default function robots(): MetadataRoute.Robots {
   return {
