@@ -5,7 +5,11 @@ import { CurrencyProvider } from '@/context/CurrencyContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { LanguageProvider } from '@/context/LanguageContext';
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://vermillion-tanuki-c5d321.netlify.app';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  alternates: { canonical: '/' },
   title: 'SBA Automobile | Japanese Vehicles for Sale in Japan & Worldwide',
   description:
     'SBA合同会社 - Browse Japanese vehicles for sale, ask about domestic purchase in Japan, and request optional export and transport support from Mito, Ibaraki.',
@@ -14,13 +18,26 @@ export const metadata: Metadata = {
     'Buy Cars in Japan', 'Buy Cars From Japan', 'Domestic Vehicle Sales', 'Japanese Car Export',
   ],
   openGraph: {
+    url: siteUrl,
+    siteName: 'SBA Automobile',
+    locale: 'en_US',
     title: 'SBA Automobile | Japanese Vehicles for Sale in Japan & Worldwide',
     description: 'Japanese vehicles for sale in Japan and overseas, with optional export and transport support from Mito, Ibaraki.',
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SBA Automobile | Japanese Vehicles for Sale',
+    description: 'Browse Japanese vehicles for sale in Japan. Ask SBA合同会社 about domestic purchases, sourcing, transport and optional export.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1, 'max-video-preview': -1 },
+  },
 };
 
-export const viewport: Viewport = { width: 'device-width', initialScale: 1, maximumScale: 1 };
+export const viewport: Viewport = { width: 'device-width', initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
