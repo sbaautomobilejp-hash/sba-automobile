@@ -5,7 +5,7 @@ import { CurrencyProvider } from '@/context/CurrencyContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { LanguageProvider } from '@/context/LanguageContext';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://vermillion-tanuki-c5d321.netlify.app';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sba-automobile.netlify.app';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
