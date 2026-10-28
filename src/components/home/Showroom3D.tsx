@@ -41,10 +41,10 @@ export default function Showroom3D() {
     camera.position.set(isMobile ? 6.8 : 5.8, isMobile ? 2.35 : 2.45, isMobile ? 7.6 : 6.9);
     camera.lookAt(0, 0.65, 0);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true, powerPreference: 'low-power' });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.25 : 1.75));
+    renderer.shadowMap.enabled = !isMobile;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
 
@@ -392,13 +392,13 @@ export default function Showroom3D() {
         {/* 3D Canvas Container & UI Overlay */}
         <div className="relative rounded-2xl overflow-hidden border border-white/15 bg-gradient-to-b from-obsidian-900 to-obsidian-950 shadow-2xl">
           {/* Three.js Canvas Element */}
-          <div ref={mountRef} className="w-full h-[430px] sm:h-[520px] cursor-grab active:cursor-grabbing touch-pan-y" />
+          <div ref={mountRef} className="w-full h-[360px] sm:h-[520px] cursor-grab active:cursor-grabbing touch-pan-y" />
 
           {/* Top Left: Specification Hotspots */}
-          <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+          <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-20 flex flex-col gap-1.5 sm:gap-2 max-w-[calc(100%-1rem)]">
             <button
               onClick={() => setActiveFeature('engine')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold backdrop-blur-md flex items-center gap-2 transition-all ${
+              className={`px-2 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-semibold backdrop-blur-md flex items-center gap-1.5 sm:gap-2 transition-all ${
                 activeFeature === 'engine'
                   ? 'bg-japan-red text-white shadow-lg shadow-japan-red/30 border border-japan-red'
                   : 'bg-obsidian-900/80 text-slate-300 border border-white/10 hover:border-white/20'
@@ -422,9 +422,9 @@ export default function Showroom3D() {
           </div>
 
           {/* Bottom Floating Control Bar */}
-          <div className="absolute bottom-4 inset-x-4 z-20 flex flex-col sm:flex-row items-center justify-between gap-3 bg-obsidian-900/90 backdrop-blur-md border border-white/15 p-3 rounded-xl">
+          <div className="absolute bottom-2 inset-x-2 sm:bottom-4 sm:inset-x-4 z-20 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3 bg-obsidian-900/95 backdrop-blur-md border border-white/15 p-2 sm:p-3 rounded-xl">
             {/* Color Swatches */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
               <span className="text-xs text-slate-400 font-medium hidden sm:inline mr-1">
                 Finish:
               </span>
@@ -445,13 +445,13 @@ export default function Showroom3D() {
                   )}
                 </button>
               ))}
-              <span className="text-xs font-semibold text-slate-200 ml-2">
+              <span className="hidden sm:inline text-xs font-semibold text-slate-200 ml-2">
                 {activeColor.name}
               </span>
             </div>
 
             {/* Studio Lighting & Orbit Toggles */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center gap-1 sm:gap-2 flex-wrap w-full sm:w-auto">
               <button
                 onClick={() => setHeadlightsOn(!headlightsOn)}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-colors border ${
@@ -461,7 +461,7 @@ export default function Showroom3D() {
                 }`}
               >
                 <Lightbulb className="w-3.5 h-3.5 text-amber-300" />
-                <span>LED Lights</span>
+                <span className="hidden sm:inline">LED Lights</span><span className="sm:hidden">LED</span>
               </button>
 
               <button
@@ -473,7 +473,7 @@ export default function Showroom3D() {
                 }`}
               >
                 <span className="w-2 h-2 rounded-full bg-japan-red"></span>
-                <span>Underglow</span>
+                <span className="hidden sm:inline">Underglow</span><span className="sm:hidden">Glow</span>
               </button>
 
               <button
@@ -485,7 +485,7 @@ export default function Showroom3D() {
                 }`}
               >
                 <RotateCw className={`w-3.5 h-3.5 ${isRotating ? 'animate-spin-slow' : ''}`} />
-                <span>{isRotating ? 'Auto-Spin ON' : 'Paused'}</span>
+                <span className="hidden sm:inline">{isRotating ? 'Auto-Spin ON' : 'Paused'}</span><span className="sm:hidden">{isRotating ? 'Spin' : 'Pause'}</span>
               </button>
             </div>
           </div>
