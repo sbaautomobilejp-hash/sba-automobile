@@ -4,7 +4,9 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
-import { Lock, Mail, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Lock, Mail, ArrowRight, ShieldCheck, RotateCcw } from 'lucide-react';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -14,16 +16,23 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
+  const [notice, setNotice] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setNotice('');
     setIsSubmitting(true);
     try {
       await signIn(email, password);
       router.push('/admin');
     } catch (err: any) {
-      setError(err.message || 'Login failed. Check credentials.');
+      if (err?.code === 'auth/invalid-credential' || err?.code === 'auth/wrong-password' || err?.code === 'auth/user-not-found') {
+        setError('Firebase did not accept this email/password. Check the admin email and password, or use “Reset password” below. If the reset email does not arrive, the live site may be connected to a different Firebase project.');
+      } else {
+        setError(err.message || 'Login failed. Check credentials.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -63,6 +72,11 @@ export default function AdminLoginPage() {
           {error && (
             <div className="p-3 rounded-xl bg-red-500/20 border border-red-500/40 text-red-300 text-xs">
               {error}
+            </div>
+          )}
+          {notice && (
+            <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-200 text-xs">
+              {notice}
             </div>
           )}
 
@@ -108,6 +122,15 @@ export default function AdminLoginPage() {
             >
               <span>{isSubmitting ? 'Authenticating...' : 'Sign In to Portal'}</span>
               <ArrowRight className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={handlePasswordReset}
+              disabled={isResettingPassword || isSubmitting}
+              className="w-full py-2.5 px-4 rounded-xl border border-white/15 hover:border-japan-red/60 disabled:opacity-50 text-slate-300 hover:text-white font-semibold text-xs flex items-center justify-center gap-2 transition-all"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>{isResettingPassword ? 'Sending reset email...' : 'Reset password'}</span>
             </button>
           </form>
 
