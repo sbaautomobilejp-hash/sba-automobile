@@ -38,6 +38,37 @@ export default function AdminLoginPage() {
     }
   };
 
+  const handlePasswordReset = async () => {
+    setError('');
+    setNotice('');
+    const adminEmail = email.trim();
+    if (!adminEmail) {
+      setError('Enter the admin email first, then choose Reset password.');
+      return;
+    }
+    if (adminEmail.toLowerCase() !== 'shadowbrokers731@gmail.com') {
+      setError('Password reset is available only for the SBA admin email: shadowbrokers731@gmail.com.');
+      return;
+    }
+    if (!auth) {
+      setError('Firebase is not configured on this site. Please check the Netlify Firebase environment variables.');
+      return;
+    }
+    setIsResettingPassword(true);
+    try {
+      await sendPasswordResetEmail(auth, adminEmail);
+      setNotice('If this admin account exists in the Firebase project connected to this website, a password-reset email has been requested. Check Inbox and Spam.');
+    } catch (err: any) {
+      if (err?.code === 'auth/invalid-api-key' || err?.code === 'auth/api-key-not-valid') {
+        setError('The Firebase API key configured for this website is invalid. Please correct the Firebase environment variables in Netlify.');
+      } else {
+        setError(err?.message || 'Could not send the reset email. Check Firebase Authentication configuration.');
+      }
+    } finally {
+      setIsResettingPassword(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-obsidian-950 flex flex-col justify-center items-center p-4 relative overflow-hidden">
       {/* Background Japanese Watermark & Ambient Red Glow */}
