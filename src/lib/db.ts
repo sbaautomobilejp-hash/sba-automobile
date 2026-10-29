@@ -148,7 +148,8 @@ export async function uploadVehicleImage(file: File, vehicleId: string): Promise
   if (!currentUser) {
     throw new Error('Please sign in to the admin account before uploading vehicle photos.');
   }
-  const idToken = await currentUser.getIdToken();
+  // Force-refresh the Firebase ID token so the upload API receives the latest verified-email state.
+  const idToken = await currentUser.getIdToken(true);
 
   const formData = new FormData();
   formData.append('file', new File([blob], file.name.replace(/[^a-zA-Z0-9.-]/g, '_'), { type: 'image/jpeg' }));

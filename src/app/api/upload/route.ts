@@ -6,13 +6,16 @@ const MAX_UPLOAD_BYTES = 16 * 1024 * 1024;
 const FIREBASE_API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
 const ADMIN_EMAIL = 'shadowbrokers731@gmail.com';
 
-async function verifyVerifiedFirebaseUser(request: Request): Promise<boolean> {
+type VerificationResult = 'verified-admin' | 'missing-server-config' | 'invalid-token' | 'not-verified-admin';
+
+async function verifyVerifiedFirebaseUser(request: Request): Promise<VerificationResult> {
   const authorization = request.headers.get('authorization');
   const token = authorization?.match(/^Bearer\s+(.+)$/i)?.[1];
 
-  if (!token || !FIREBASE_API_KEY) return false;
+  if (!FIREBASE_API_KEY) return 'missing-server-config';
+  if (!token) return 'invalid-token';
 
-  // Firebase Identity Toolkit validates the ID token signature and expiry.
+  // Firebase Identity Toolkit validates the ID token and returns the current account state.
   const response = await fetch(
     `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${encodeURIComponent(FIREBASE_API_KEY)}`,
     {
@@ -23,25 +26,49 @@ async function verifyVerifiedFirebaseUser(request: Request): Promise<boolean> {
     }
   );
 
-  if (!response.ok) return false;
+  if (!response.ok) {
+    // Do not expose Firebase API responses or tokens to the browser.
+    console.error('Firebase account lookup failed with status:', response.status);
+    return 'invalid-token';
+  }
+
   const payload = await response.json().catch(() => null);
   const user = payload?.users?.[0];
 
-  return Boolean(
+  if (
     user?.localId &&
     user?.emailVerified === true &&
     typeof user?.email === 'string' &&
-    user.email.toLowerCase() === ADMIN_EMAIL
-  );
+    user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()
+  ) {
+    return 'verified-admin';
+  }
+
+  return 'not-verified-admin';
 }
 
 export async function POST(request: Request) {
   try {
-    const authorized = await verifyVerifiedFirebaseUser(request);
-    if (!authorized) {
+    const verification = await verifyVerifiedFirebaseUser(request);
+
+    if (verification !== 'verified-admin') {
+      if (verification === 'missing-server-config') {
+        return NextResponse.json(
+          { error: 'Server Firebase configuration is missing. Please check the NEXT_PUBLIC_FIREBASE_API_KEY setting in Netlify.' },
+          { status: 500 }
+        );
+      }
+
+      if (verification === 'invalid-token') {
+        return NextResponse.json(
+          { error: 'Your admin session could not be verified. Please sign out, sign in again, and retry the upload.' },
+          { status: 401 }
+        );
+      }
+
       return NextResponse.json(
-        { error: 'Please sign in with a verified admin account before uploading images.' },
-        { status: 401 }
+        { error: 'Firebase does not recognize this account as the verified SBA admin. Check the email verification status in Firebase Authentication.' },
+        { status: 403 }
       );
     }
 
