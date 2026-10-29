@@ -6,7 +6,7 @@ const MAX_UPLOAD_BYTES = 16 * 1024 * 1024;
 const FIREBASE_API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
 const ADMIN_EMAIL = 'shadowbrokers731@gmail.com';
 
-type VerificationResult = 'verified-admin' | 'missing-server-config' | 'invalid-token' | 'not-verified-admin';
+type VerificationResult = 'verified-admin' | 'missing-server-config' | 'invalid-server-api-key' | 'invalid-token' | 'not-verified-admin';
 
 async function verifyVerifiedFirebaseUser(request: Request): Promise<VerificationResult> {
   const authorization = request.headers.get('authorization');
@@ -26,13 +26,17 @@ async function verifyVerifiedFirebaseUser(request: Request): Promise<Verificatio
     }
   );
 
+  const payload = await response.json().catch(() => null);
+
   if (!response.ok) {
-    // Do not expose Firebase API responses or tokens to the browser.
-    console.error('Firebase account lookup failed with status:', response.status);
+    // Log only the status and Firebase error code; never log tokens or API keys.
+    const firebaseError = typeof payload?.error?.message === 'string' ? payload.error.message : '';
+    console.error('Firebase account lookup failed:', response.status, firebaseError);
+    if (firebaseError.includes('API_KEY_INVALID') || firebaseError.includes('API_KEY_SERVICE_BLOCKED')) {
+      return 'invalid-server-api-key';
+    }
     return 'invalid-token';
   }
-
-  const payload = await response.json().catch(() => null);
   const user = payload?.users?.[0];
 
   if (
@@ -55,6 +59,13 @@ export async function POST(request: Request) {
       if (verification === 'missing-server-config') {
         return NextResponse.json(
           { error: 'Server Firebase configuration is missing. Please check the NEXT_PUBLIC_FIREBASE_API_KEY setting in Netlify.' },
+          { status: 500 }
+        );
+      }
+
+      if (verification === 'invalid-server-api-key') {
+        return NextResponse.json(
+          { error: 'Firebase rejected the API key configured for this site. Check NEXT_PUBLIC_FIREBASE_API_KEY and its API restrictions in Netlify and Google Cloud.' },
           { status: 500 }
         );
       }
