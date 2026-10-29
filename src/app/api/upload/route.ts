@@ -8,7 +8,7 @@ const ADMIN_EMAIL = 'shadowbrokers731@gmail.com';
 
 async function verifyVerifiedFirebaseUser(request: Request): Promise<boolean> {
   const authorization = request.headers.get('authorization');
-  const token = authorization?.match(/^Bearer\\s+(.+)$/i)?.[1];
+  const token = authorization?.match(/^Bearer\s+(.+)$/i)?.[1];
 
   if (!token || !FIREBASE_API_KEY) return false;
 
