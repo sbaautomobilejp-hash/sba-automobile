@@ -4,6 +4,7 @@ export const runtime = 'nodejs';
 
 const MAX_UPLOAD_BYTES = 16 * 1024 * 1024;
 const FIREBASE_API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+const IMAGEKIT_PRIVATE_KEY = process.env.IMAGEKIT_PRIVATE_KEY;
 const ADMIN_EMAIL = 'shadowbrokers731@gmail.com';
 
 type VerificationResult = 'verified-admin' | 'missing-server-config' | 'invalid-server-api-key' | 'invalid-token' | 'not-verified-admin';
@@ -83,6 +84,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!IMAGEKIT_PRIVATE_KEY) {
+      return NextResponse.json(
+        { error: 'Image upload is not configured yet. Please check the IMAGEKIT_PRIVATE_KEY setting in Netlify.' },
+        { status: 500 }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get('file');
 
@@ -98,23 +106,43 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Image is too large. Maximum size is 16 MB.' }, { status: 413 });
     }
 
-    const upstream = new FormData();
-    upstream.append('file', new Blob([await file.arrayBuffer()], { type: file.type }), file.name);
+    const originalName = file.name || 'vehicle-image.jpg';
+    const safeFileName = originalName
+      .normalize('NFKD')
+      .replace(/[^a-zA-Z0-9.-]+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '') || 'vehicle-image.jpg';
 
-    // Free public image hosting. ttl=0 keeps the returned image URL from expiring.
-    const response = await fetch('https://imgdb.io/api/v1/upload?ttl=0', {
+    const upstream = new FormData();
+    upstream.append('file', new Blob([await file.arrayBuffer()], { type: file.type }), safeFileName);
+    upstream.append('fileName', safeFileName);
+    upstream.append('useUniqueFileName', 'true');
+
+    const vehicleId = formData.get('vehicleId');
+    if (typeof vehicleId === 'string' && vehicleId.trim()) {
+      const safeVehicleId = vehicleId.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 80);
+      if (safeVehicleId) upstream.append('folder', `/sba-automobile/vehicles/${safeVehicleId}`);
+    }
+
+    // Server-side Basic Auth keeps the ImageKit private key out of browser code.
+    const authorization = `Basic ${Buffer.from(`${IMAGEKIT_PRIVATE_KEY}:`).toString('base64')}`;
+    const response = await fetch('https://upload.imagekit.io/api/v1/files/upload', {
       method: 'POST',
       body: upstream,
-      headers: { Accept: 'application/json' },
+      headers: {
+        Accept: 'application/json',
+        Authorization: authorization,
+      },
       cache: 'no-store',
     });
 
     const payload = await response.json().catch(() => null);
 
-    if (!response.ok || !payload?.url) {
-      const message = typeof payload?.error === 'string'
-        ? payload.error
-        : `Image host returned HTTP ${response.status}.`;
+    if (!response.ok || typeof payload?.url !== 'string') {
+      const message = typeof payload?.message === 'string'
+        ? payload.message
+        : `ImageKit returned HTTP ${response.status} while uploading the image.`;
+      console.error('ImageKit upload failed:', response.status, message);
       return NextResponse.json({ error: message }, { status: 502 });
     }
 
