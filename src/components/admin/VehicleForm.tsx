@@ -443,7 +443,7 @@ export default function VehicleForm({ initialVehicle, isEditing = false }: Vehic
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className="block text-slate-300 font-semibold mb-1">
-              FOB Price in JPY (¥) *
+              Sale Price in JPY (¥) *
             </label>
             <input
               type="number"
@@ -466,9 +466,9 @@ export default function VehicleForm({ initialVehicle, isEditing = false }: Vehic
               onChange={(e: any) => setStatus(e.target.value)}
               className="w-full px-3 py-2.5 rounded-xl bg-obsidian-850 border border-white/10 text-white focus:border-japan-red"
             >
-              <option value="available">Available For Export</option>
-              <option value="reserved">Reserved (Deposit Received)</option>
-              <option value="sold">Sold / Exported</option>
+              <option value="available">Available For Sale</option>
+              <option value="reserved">Reserved</option>
+              <option value="sold">Sold</option>
             </select>
           </div>
 
