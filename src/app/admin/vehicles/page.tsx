@@ -209,7 +209,7 @@ export default function AdminVehiclesPage() {
                 <div className="flex flex-row md:flex-col items-center md:items-end justify-between gap-2 border-t md:border-t-0 border-white/5 pt-3 md:pt-0">
                   <div className="text-left md:text-right">
                     <span className="text-[10px] text-slate-400 uppercase tracking-wider block">
-                      FOB Price
+                      Sale Price
                     </span>
                     <span className="text-base sm:text-lg font-black text-white font-mono">
                       {formatPrice(v.price)}
