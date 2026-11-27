@@ -22,31 +22,31 @@ interface VehicleFormProps {
   isEditing?: boolean;
 }
 
-const COMMON_MAKES = ['Toyota', 'Nissan', 'Honda', 'Lexus', 'Mazda', 'Subaru', 'Mitsubishi', 'Suzuki', 'Other'];
+const COMMON_MAKES = ['Toyota', 'Nissan', 'Honda', 'Daihatsu', 'Lexus', 'Mazda', 'Subaru', 'Mitsubishi', 'Suzuki', 'Isuzu', 'Hino', 'Mitsubishi Fuso', 'Mercedes-Benz', 'BMW', 'Volkswagen', 'Audi', 'Volvo', 'Other'];
 
 export default function VehicleForm({ initialVehicle, isEditing = false }: VehicleFormProps) {
   const router = useRouter();
   const { formatPrice } = useCurrency();
 
-  const [make, setMake] = useState(initialVehicle?.make || 'Toyota');
+  const [make, setMake] = useState(initialVehicle?.make || '');
   const [model, setModel] = useState(initialVehicle?.model || '');
   const [trim, setTrim] = useState(initialVehicle?.trim || '');
   const [year, setYear] = useState<number>(initialVehicle?.year || 2023);
   const [mileage, setMileage] = useState<number>(initialVehicle?.mileage || 10000);
   const [engine, setEngine] = useState(initialVehicle?.engine || '');
   const [engineDisplacement, setEngineDisplacement] = useState(initialVehicle?.engineDisplacement || '');
-  const [transmission, setTransmission] = useState<TransmissionType>(initialVehicle?.transmission || 'Automatic');
-  const [fuelType, setFuelType] = useState<FuelType>(initialVehicle?.fuelType || 'Petrol');
-  const [driveType, setDriveType] = useState<DriveType>(initialVehicle?.driveType || '4WD');
+  const [transmission, setTransmission] = useState<TransmissionType>(initialVehicle?.transmission || 'Unknown');
+  const [fuelType, setFuelType] = useState<FuelType>(initialVehicle?.fuelType || 'Unknown');
+  const [driveType, setDriveType] = useState<DriveType>(initialVehicle?.driveType || 'Unknown');
   const [steering, setSteering] = useState<SteeringType>(initialVehicle?.steering || 'RHD');
   const [chassisCode, setChassisCode] = useState(initialVehicle?.chassisCode || '');
-  const [color, setColor] = useState(initialVehicle?.color || 'Pearl White');
-  const [auctionGrade, setAuctionGrade] = useState(initialVehicle?.auctionGrade || 'Grade 4.5 / Interior A');
+  const [color, setColor] = useState(initialVehicle?.color || '');
+  const [auctionGrade, setAuctionGrade] = useState(initialVehicle?.auctionGrade || '');
   const [price, setPrice] = useState<number>(initialVehicle?.price || 5000000);
   const [status, setStatus] = useState<VehicleStatus>(initialVehicle?.status || 'available');
   const [featured, setFeatured] = useState<boolean>(initialVehicle?.featured || false);
   const [description, setDescription] = useState(initialVehicle?.description || '');
-  const [featuresText, setFeaturesText] = useState(initialVehicle?.features?.join(', ') || 'Sunroof, Leather Seats, 360 Camera, Radar Cruise');
+  const [featuresText, setFeaturesText] = useState(initialVehicle?.features?.join(', ') || '');
   const [images, setImages] = useState<string[]>(initialVehicle?.images || []);
 
   const [isUploading, setIsUploading] = useState(false);
@@ -269,15 +269,18 @@ export default function VehicleForm({ initialVehicle, isEditing = false }: Vehic
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className="block text-slate-300 font-semibold mb-1">Make / Brand *</label>
-            <select
+            <input
+              type="text"
+              list="vehicle-makes"
+              required
               value={make}
               onChange={(e) => setMake(e.target.value)}
+              placeholder="Select or type a brand (e.g. Daihatsu)"
               className="w-full px-3 py-2.5 rounded-xl bg-obsidian-850 border border-white/10 text-white focus:border-japan-red"
-            >
-              {COMMON_MAKES.map((m) => (
-                <option key={m} value={m}>{m}</option>
-              ))}
-            </select>
+            />
+            <datalist id="vehicle-makes">
+              {COMMON_MAKES.map((m) => <option key={m} value={m} />)}
+            </datalist>
           </div>
 
           <div>
@@ -293,10 +296,9 @@ export default function VehicleForm({ initialVehicle, isEditing = false }: Vehic
           </div>
 
           <div>
-            <label className="block text-slate-300 font-semibold mb-1">Grade / Trim *</label>
+            <label className="block text-slate-300 font-semibold mb-1">Grade / Trim (Optional)</label>
             <input
               type="text"
-              required
               value={trim}
               onChange={(e) => setTrim(e.target.value)}
               placeholder="e.g. ZX 4WD (Modellista)"
@@ -332,10 +334,9 @@ export default function VehicleForm({ initialVehicle, isEditing = false }: Vehic
           </div>
 
           <div>
-            <label className="block text-slate-300 font-semibold mb-1">Chassis / Frame Code *</label>
+            <label className="block text-slate-300 font-semibold mb-1">Chassis / Frame Code (Optional)</label>
             <input
               type="text"
-              required
               value={chassisCode}
               onChange={(e) => setChassisCode(e.target.value)}
               placeholder="e.g. 3BA-VJA300W"
@@ -353,10 +354,9 @@ export default function VehicleForm({ initialVehicle, isEditing = false }: Vehic
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-slate-300 font-semibold mb-1">Engine Type & Code *</label>
+            <label className="block text-slate-300 font-semibold mb-1">Engine Type & Code (Optional)</label>
             <input
               type="text"
-              required
               value={engine}
               onChange={(e) => setEngine(e.target.value)}
               placeholder="e.g. 3.5L V6 Twin-Turbo (V35A-FTS)"
@@ -384,6 +384,7 @@ export default function VehicleForm({ initialVehicle, isEditing = false }: Vehic
               onChange={(e: any) => setTransmission(e.target.value)}
               className="w-full px-3 py-2.5 rounded-xl bg-obsidian-850 border border-white/10 text-white focus:border-japan-red"
             >
+              <option value="Unknown">Not specified</option>
               <option value="Automatic">Automatic (AT)</option>
               <option value="Manual">Manual (MT)</option>
               <option value="CVT">CVT</option>
@@ -398,6 +399,7 @@ export default function VehicleForm({ initialVehicle, isEditing = false }: Vehic
               onChange={(e: any) => setFuelType(e.target.value)}
               className="w-full px-3 py-2.5 rounded-xl bg-obsidian-850 border border-white/10 text-white focus:border-japan-red"
             >
+              <option value="Unknown">Not specified</option>
               <option value="Petrol">Petrol / Gasoline</option>
               <option value="Diesel">Diesel</option>
               <option value="Hybrid">Hybrid</option>
@@ -412,6 +414,7 @@ export default function VehicleForm({ initialVehicle, isEditing = false }: Vehic
               onChange={(e: any) => setDriveType(e.target.value)}
               className="w-full px-3 py-2.5 rounded-xl bg-obsidian-850 border border-white/10 text-white focus:border-japan-red"
             >
+              <option value="Unknown">Not specified</option>
               <option value="2WD">2WD (Two-wheel drive)</option>
               <option value="4WD">4WD (Four-wheel drive)</option>
               <option value="AWD">AWD (All-wheel drive)</option>
@@ -473,7 +476,7 @@ export default function VehicleForm({ initialVehicle, isEditing = false }: Vehic
           </div>
 
           <div>
-            <label className="block text-slate-300 font-semibold mb-1">Auction Grade</label>
+            <label className="block text-slate-300 font-semibold mb-1">Auction Grade (Optional)</label>
             <input
               type="text"
               value={auctionGrade}
