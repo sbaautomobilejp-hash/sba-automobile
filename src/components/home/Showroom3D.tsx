@@ -14,7 +14,8 @@ const COLOR_OPTIONS = [
 
 export default function Showroom3D() {
   const mountRef = useRef<HTMLDivElement>(null);
-  const [activeColor, setActiveColor] = useState(COLOR_OPTIONS[1]); // Default Suzuka Crimson
+  const [activeColor, setActiveColor] = useState(COLOR_OPTIONS[1]);
+  const [webglUnavailable, setWebglUnavailable] = useState(false); // Default Suzuka Crimson
   const [headlightsOn, setHeadlightsOn] = useState(true);
   const [underglowOn, setUnderglowOn] = useState(true);
   const [isRotating, setIsRotating] = useState(true);
@@ -29,6 +30,14 @@ export default function Showroom3D() {
     const container = mountRef.current;
     if (!container) return;
 
+    // iOS Safari/WebViews can fail to create WebGL contexts on some devices.
+    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (isIOS || (!window.WebGLRenderingContext && !window.WebGL2RenderingContext)) {
+      setWebglUnavailable(true);
+      return;
+    }
+
     // Scene, Camera, Renderer
     const width = container.clientWidth;
     const height = container.clientHeight || 520;
@@ -41,7 +50,14 @@ export default function Showroom3D() {
     camera.position.set(isMobile ? 6.8 : 5.8, isMobile ? 2.35 : 2.45, isMobile ? 7.6 : 6.9);
     camera.lookAt(0, 0.65, 0);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true, powerPreference: 'low-power' });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true, powerPreference: 'low-power' });
+    } catch (error) {
+      console.warn('3D showroom unavailable; showing lightweight fallback.', error);
+      setWebglUnavailable(true);
+      return;
+    }
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.25 : 1.75));
     renderer.shadowMap.enabled = !isMobile;
@@ -392,7 +408,7 @@ export default function Showroom3D() {
         {/* 3D Canvas Container & UI Overlay */}
         <div className="relative rounded-2xl overflow-hidden border border-white/15 bg-gradient-to-b from-obsidian-900 to-obsidian-950 shadow-2xl">
           {/* Three.js Canvas Element */}
-          <div ref={mountRef} className="w-full h-[360px] sm:h-[520px] cursor-grab active:cursor-grabbing touch-pan-y" />
+          <div ref={mountRef} className="relative w-full h-[360px] sm:h-[520px] cursor-grab active:cursor-grabbing touch-pan-y">{webglUnavailable && <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-gradient-to-br from-obsidian-900 via-obsidian-950 to-black"><div className="text-japan-red text-xs font-bold uppercase tracking-[0.25em] mb-3">SBA Automobile</div><div className="text-2xl sm:text-3xl font-black text-white">Japanese Vehicle Showroom</div><p className="text-sm text-slate-400 mt-3 max-w-md">Explore our available vehicles below. This lightweight view is optimized for your device.</p><a href="#inventory" className="mt-5 px-5 py-3 rounded-xl bg-japan-red text-white text-sm font-bold">View Vehicle Inventory</a></div>}</div>
 
           {/* Top Left: Specification Hotspots */}
           <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-20 flex flex-col gap-1.5 sm:gap-2 max-w-[calc(100%-1rem)]">
